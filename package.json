@@ -1,0 +1,40 @@
+{
+  "name": "digital_police_web",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^3.19.8",
+    "axios": "^0.19.0",
+    "global": "^4.4.0",
+    "lodash": "^4.17.11",
+    "mobx": "^5.10.1",
+    "mobx-react": "^6.1.1",
+    "mobx-react-devtools": "^6.1.1",
+    "mobx-react-router": "^4.0.7",
+    "moment": "^2.24.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
+    "react-scripts-ts": "3.1.0",
+    "stylus": "^0.54.5"
+  },
+  "scripts": {
+    "build-css": "stylus -c src/static/stylus/ --out src/static/css",
+    "watch-css": "yarn run build-css && stylus -c -w src/static/stylus --out src/static/css",
+    "start-ts": "react-scripts-ts start",
+    "start": "npm-run-all -p watch-css start-ts",
+    "build-ts": "react-scripts-ts build",
+    "build": "npm-run-all build-css build-ts",
+    "eject": "react-scripts-ts eject"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.10",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-router-dom": "^4.3.4",
+    "@types/webpack-env": "^1.13.9",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^3.5.2"
+  }
+}
