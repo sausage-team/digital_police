@@ -29,6 +29,7 @@
     "jsx-no-multiline-js": false,
     "label-position": true,
     "max-line-length": [ false, 120 ],
+    "max-classes-per-file": true,
     "member-ordering": [
       true,
       "variables-before-functions"
@@ -64,6 +65,7 @@
       "check-open-brace",
       "check-whitespace"
     ],
+    "ordered-imports": false,
     "quotemark": [true, "single", "jsx-double"],
     "radix": true,
     "switch-default": true,

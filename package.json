@@ -55,5 +55,12 @@
     "hooks": {
       "pre-commit": "yarn lint && yarn lint-styl"
     }
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:3000",
+      "ws": true,
+      "changeOrigin": true
+    }
   }
 }
