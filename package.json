@@ -50,6 +50,6 @@
     "typescript": "^3.5.2"
   },
   "pre-commit": [
-    "lint"
+    "yarn lint"
   ]
 }
