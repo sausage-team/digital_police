@@ -19,8 +19,8 @@
     "stylus": "^0.54.5"
   },
   "scripts": {
-    "build-css": "stylus -c src/static/stylus/ --out src/static/css",
-    "watch-css": "yarn run build-css && stylus -c -w src/static/stylus --out src/static/css",
+    "build-css": "stylus -c src/styles/stylus/ --out src/styles/css",
+    "watch-css": "yarn run build-css && stylus -c -w src/styles/stylus --out src/styles/css",
     "start-ts": "react-scripts-ts start",
     "start": "npm-run-all -p watch-css start-ts",
     "build-ts": "react-scripts-ts build",

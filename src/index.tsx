@@ -7,7 +7,7 @@ import registerServiceWorker from './pwa/registerServiceWorker'
 import AppRouter from './routers'
 import stores from './stores'
 
-import './static/css/index.css'
+import './styles/css/index.css'
 
 ReactDOM.render(
   <Provider {...stores}>
