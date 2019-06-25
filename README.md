@@ -1,6 +1,6 @@
 #### 依赖安装
 ```
-  npm i stylus -g && yarn add stylus && yarn
+  npm i stylus -g && yarn
 ```
 #### 调试环境
 ```
