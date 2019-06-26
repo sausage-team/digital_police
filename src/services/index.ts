@@ -1,5 +1,6 @@
 import axios from 'axios'
 import 'reflect-metadata'
+import loaderStore, { LoaderStore } from '../stores/modules/loader'
 
 interface HttpBase {
   http: any,
@@ -12,6 +13,8 @@ interface HttpBase {
 class AxiosUtil {
 
   public static http: any
+  public static loader: LoaderStore = loaderStore
+  public static reqCount: number = 0
 
   public static getAxios (): any {
     if (!this.http) {
@@ -19,14 +22,30 @@ class AxiosUtil {
       this.http.timeout = 45000
 
       this.http.interceptors.request.use((config: any) => {
+        if (this.reqCount === 0) {
+          this.loader.loaderStart()
+        }
+        this.reqCount++
         return config
       }, (error: any) => {
+        this.reqCount--
+        if (this.reqCount === 0) {
+          this.loader.loaderEnd()
+        }
         return Promise.reject(error)
       })
 
       this.http.interceptors.response.use((response: any) => {
+        this.reqCount--
+        if (this.reqCount === 0) {
+          this.loader.loaderEnd()
+        }
         return response
       }, (error: any) => {
+        this.reqCount--
+        if (this.reqCount === 0) {
+          this.loader.loaderEnd()
+        }
         return Promise.reject(error)
       })
     }
