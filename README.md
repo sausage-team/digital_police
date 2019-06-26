@@ -1,6 +1,8 @@
 #### 依赖安装
 ```
-  npm i stylus -g && yarn
+  npm i stylus -g
+  mkdir src/stylus/css
+  yarn
 ```
 #### 调试环境
 ```
