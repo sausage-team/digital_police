@@ -3,10 +3,10 @@ import 'reflect-metadata'
 
 interface HttpBase {
   http: any,
-  get (str: string, data: object, resolve: any): void,
-  delete (str: string, data: object, resolve: any): void,
-  put (str: string, data: object, resolve: any): void,
-  post (str: string, data: object, resolve: any): void
+  get (str: string, data: object, resolve: any): Promise<any>,
+  delete (str: string, data: object, resolve: any): Promise<any>,
+  put (str: string, data: object, resolve: any): Promise<any>,
+  post (str: string, data: object, resolve: any): Promise<any>
 }
 
 class AxiosUtil {
