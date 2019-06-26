@@ -2,10 +2,10 @@
 import { createBrowserHistory } from 'history'
 import { RouterStore, syncHistoryWithStore } from 'mobx-react-router'
 import * as React from 'react'
-import { Route, Router, Switch } from 'react-router'
+import { Route, Router, Switch, Redirect } from 'react-router'
 
-import About from '../pages/about'
-import Home from '../pages/home'
+import Login from 'src/pages/login'
+import Main from 'src/pages/main'
 
 const browserHistory = createBrowserHistory()
 const routerStore = new RouterStore()
@@ -13,24 +13,24 @@ const history = syncHistoryWithStore(browserHistory, routerStore)
 
 export default class AppRouter extends React.Component<{}, {}> {
   public render () {
+    
     return (
       <Router history={history}>
         <Switch>
           <Route
             path="/"
-            exact={true}
-            strict={true}
-            component={Home}
+            exact
+            component={Main}
           />
           <Route
-            path="/home"
-            exact={true}
-            component={Home}
+            path="/main"
+            component={Main}
           />
           <Route
-            path="/about"
-            component={About}
+            path="/login"
+            component={Login}
           />
+          <Redirect to="/" />
         </Switch>
       </Router>
     )

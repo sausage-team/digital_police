@@ -4,7 +4,7 @@ class App extends React.Component<{}, {}> {
 
   public render () {
     return (
-      <div className="main">
+      <div className="app">
         {this.props.children}
       </div>
     )

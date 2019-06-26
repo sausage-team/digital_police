@@ -21,8 +21,8 @@
     "reflect-metadata": "^0.1.13"
   },
   "scripts": {
-    "build-css": "yarn lint-styl && stylus -c src/styles/stylus/ --out src/styles/css",
-    "watch-css": "yarn run build-css && stylus -c -w src/styles/stylus --out src/styles/css",
+    "build-css": "stylus -c src/styles/stylus/ --out src/styles/css",
+    "watch-css": "yarn run build-css && stylus -c -w src/styles/stylus/ --out src/styles/css",
     "lint-styl": "stylint src/styles/stylus",
     "start-ts": "react-scripts-ts start",
     "start": "npm-run-all -p watch-css start-ts",
@@ -58,9 +58,12 @@
   },
   "proxy": {
     "/api": {
-      "target": "http://localhost:3000",
-      "ws": true,
-      "changeOrigin": true
+      "target": "http://localhost:5000",
+      "changeOrigin": true,
+      "ws": false,
+      "pathRewrite": {
+        "^/api": "/api"
+      }
     }
   }
 }
