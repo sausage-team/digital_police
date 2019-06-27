@@ -29,7 +29,11 @@ class Login extends React.Component<LoginProps, {}> {
     return (
       <div className="login-main">
         <div className="login-form">
-          <Form onSubmit={this.login}>
+          <div className="login-logo">
+            <i></i>
+            <span>武汉市公安局数字派出所管理平台</span>
+          </div>
+          <Form className="form-con" onSubmit={this.login}>
             <Form.Item>
               {
                 getFieldDecorator('username', {
@@ -70,13 +74,13 @@ class Login extends React.Component<LoginProps, {}> {
                   })(
                   <Checkbox>记住密码</Checkbox>)
                 }
-                <a className="login-form-forgot" href="">
-                  忘记密码
-                </a>
               </div>
               <div className="sub-box">
                 <Button type="primary" htmlType="submit" className="login-form-button">
                   登录
+                </Button>
+                <Button type="primary" className="login-form-button">
+                  PKI登录
                 </Button>
               </div>
             </Form.Item>
