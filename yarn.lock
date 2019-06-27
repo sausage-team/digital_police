@@ -9734,7 +9734,7 @@ tsconfig-paths@^3.1.1:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@^1.8.0, tslib@^1.8.1:
+tslib@^1.10.0, tslib@^1.8.0, tslib@^1.8.1:
   version "1.10.0"
   resolved "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==
@@ -9824,10 +9824,10 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.5.2:
-  version "3.5.2"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-3.5.2.tgz#a09e1dc69bc9551cadf17dba10ee42cf55e5d56c"
-  integrity sha512-7KxJovlYhTX5RaRbUdkAXN1KUZ8PwWlTzQdHV6xNqvuFOs7+WBo10TQUqT19Q/Jz2hk5v9TQDIhyLhhJY4p5AA==
+typescript@^3.6.0-dev.20190626:
+  version "3.6.0-dev.20190626"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-3.6.0-dev.20190626.tgz#b1892ce0fd5e4afd5f22e620984127cb8b1b2933"
+  integrity sha512-m2WfonrCESLYCtNKPAab9pKiMMt8mPT9iHTrok9DAei+D8QBrvSeBU0jOU9+K3Z5lNtH8S4CToX8n5s5dbZJoA==
 
 ua-parser-js@^0.7.18:
   version "0.7.20"

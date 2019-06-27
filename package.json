@@ -18,7 +18,8 @@
     "react-router-config": "^5.0.1",
     "react-router-dom": "^5.0.1",
     "react-transition-group": "^4.1.1",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^1.10.0"
   },
   "scripts": {
     "build-css": "stylus -c src/styles/stylus/ --out src/styles/css",
@@ -49,7 +50,7 @@
     "react-scripts-ts": "3.1.0",
     "stylint": "^1.5.9",
     "stylus": "^0.54.5",
-    "typescript": "^3.5.2"
+    "typescript": "^3.6.0-dev.20190626"
   },
   "husky": {
     "hooks": {
