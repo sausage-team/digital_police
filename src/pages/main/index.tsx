@@ -5,22 +5,21 @@ import { Menu, Icon } from 'antd'
 import HeaderNav from 'src/components/header'
 import { UserService } from 'src/services/user'
 import { observable } from 'mobx';
+import { HomeStore } from 'src/stores/modules/home'
 
-export interface MainProps {
-  toggle: () => void
-}
-
-@inject('userService')
+@inject('userService', 'home')
 @observer
-export default class Main extends React.Component<MainProps, {}> {
+export default class Main extends React.Component<{}, {}> {
 
   public userService: UserService
+  public homeStore: HomeStore
 
   @observable public collapsed: boolean = false
 
-  constructor (props: MainProps | any) {
+  constructor (props: any) {
     super(props)
-    this.userService = props.UserService
+    this.userService = props.userService
+    this.homeStore = props.home
   }
 
   public componentDidMount () {
