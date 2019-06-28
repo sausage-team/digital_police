@@ -5,7 +5,8 @@ import {
   Icon,
   Input,
   Button,
-  Checkbox
+  Checkbox,
+  message
 } from 'antd'
 import { RouteComponentProps } from 'react-router'
 
@@ -22,6 +23,12 @@ class Login extends React.Component<LoginProps, {}> {
 
   public login = (e: any): void => {
     e.preventDefault()
+    this.props.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        message.success('登录成功')
+        this.props.history.replace('/main/home')
+      }
+    })
   }
 
   public render () {

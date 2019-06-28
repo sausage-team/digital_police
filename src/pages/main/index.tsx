@@ -1,15 +1,23 @@
 import { observer, inject } from 'mobx-react'
 import * as React from 'react'
 import { Menu, Icon } from 'antd'
+import { Route, Switch, Redirect, RouteComponentProps } from 'react-router'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
+import Home from './home'
 import HeaderNav from 'src/components/header'
+
 import { UserService } from 'src/services/user'
 import { observable } from 'mobx';
 import { HomeStore } from 'src/stores/modules/home'
 
+interface MainProps {
+  name?: string
+}
+
 @inject('userService', 'home')
 @observer
-export default class Main extends React.Component<{}, {}> {
+export default class Main extends React.Component<MainProps & RouteComponentProps<{}>, {}> {
 
   public userService: UserService
   public homeStore: HomeStore
@@ -31,17 +39,18 @@ export default class Main extends React.Component<{}, {}> {
   }
 
   public render () {
+    const location = this.props.location
+    const { pathname } = location
     return (
       <div className="main">
         <HeaderNav toggle={this.toggleMenu} />
         <div className="main-body">
-          <div className="left-menu">
+          <div className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
             <Menu
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
               mode="inline"
-              theme="dark"
-              inlineCollapsed={this.collapsed}>
+              theme="dark">
                 <Menu.Item key="1">
                   <Icon type="pie-chart" />
                   <span>Option 1</span>
@@ -86,7 +95,22 @@ export default class Main extends React.Component<{}, {}> {
                 </Menu.SubMenu>
             </Menu>
           </div>
-          <div className="main-body"></div>
+          <div className="right-body">
+            <TransitionGroup className="main-route">
+              <CSSTransition
+                key={pathname.split('/')[2]}
+                timeout={{ enter: 1000, exit: 0 }}
+                classNames={'fade'}>
+                  <Switch location={location}>
+                    <Route
+                      path="/main/home"
+                      component={Home}
+                    />
+                    <Redirect to="/main/home" />
+                  </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          </div>
         </div>
       </div>
     )
