@@ -1,6 +1,8 @@
 import { Provider } from 'mobx-react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import { configure } from 'mobx'
+configure({ enforceActions: true })
 
 import App from './pages/App'
 import registerServiceWorker from './pwa/registerServiceWorker'
