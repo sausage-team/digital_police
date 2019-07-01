@@ -4,7 +4,7 @@ import Loading from '../components/loading'
 import { observable } from 'mobx';
 import { LoaderStore } from '../stores/modules/loader'
 
-@inject('loader')
+@inject('loader', 'user')
 @observer
 class App extends React.Component<{}, {}> {
 
@@ -13,6 +13,11 @@ class App extends React.Component<{}, {}> {
   constructor (props: any) {
     super(props)
     this.loaderStore = props.loader
+    if (!props.user.getAccount()) {
+      if (location.pathname !== '/login') {
+        location.replace('/login')
+      }
+    }
   }
 
   public render () {

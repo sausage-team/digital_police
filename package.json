@@ -59,7 +59,7 @@
   },
   "proxy": {
     "/api": {
-      "target": "http://localhost:5000",
+      "target": "http://192.168.18.35:8080",
       "changeOrigin": true,
       "ws": false,
       "pathRewrite": {
