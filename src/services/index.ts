@@ -27,6 +27,10 @@ class AxiosUtil {
         if (this.reqCount === 0) {
           this.loader.loaderStart()
         }
+        const account: any = user.getAccount()
+        if (account) {
+          config.headers.Authorization = `Bearer ${account.access_token}`
+        }
         this.reqCount++
         return config
       }, (error: any) => {
