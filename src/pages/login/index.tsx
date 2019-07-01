@@ -9,24 +9,45 @@ import {
   message
 } from 'antd'
 import { RouteComponentProps } from 'react-router'
+import { UserService } from '../../services/user'
+import { UserStore } from '../../stores/modules/user'
 
 export interface LoginProps extends RouteComponentProps<{}> {
-  form: any
+  form: any,
+  userService: UserService,
+  user: UserStore
 }
 
-@inject()
+@inject('userService', 'user')
 @observer
 class Login extends React.Component<LoginProps, {}> {
+
+  public userService: UserService
+  public userStore: UserStore
+
   constructor (props: any) {
     super(props)
+    this.userService = props.userService
+    this.userStore = props.user
   }
 
-  public login = (e: any): void => {
+  public login = async (e: any): Promise<any> => {
     e.preventDefault()
-    this.props.form.validateFields((err: any, values: any) => {
+    this.props.form.validateFields(async (err: any, values: any) => {
       if (!err) {
-        message.success('登录成功')
-        this.props.history.replace('/main/home')
+        const putData: any = {
+          ...values,
+          remember: undefined
+        }
+        const res = await this.userService.sign(putData)
+        console.log(res)
+        if (res.status === 0) {
+          message.success('登录成功')
+          this.userStore.saveLoginData(res.data)
+          this.props.history.replace('/main/home')
+        } else {
+          message.error(res.msg || '登录失败')
+        }
       }
     })
   }
