@@ -8,16 +8,12 @@ import Home from './home'
 import HeaderNav from 'src/components/header'
 
 import { UserService } from 'src/services/user'
-import { observable } from 'mobx';
+import { observable } from 'mobx'
 import { HomeStore } from 'src/stores/modules/home'
-
-interface MainProps {
-  name?: string
-}
 
 @inject('userService', 'home')
 @observer
-export default class Main extends React.Component<MainProps & RouteComponentProps<{}>, {}> {
+class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public userService: UserService
   public homeStore: HomeStore
@@ -116,3 +112,5 @@ export default class Main extends React.Component<MainProps & RouteComponentProp
     )
   }
 }
+
+export default Main

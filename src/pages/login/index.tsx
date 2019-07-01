@@ -1,4 +1,4 @@
-import { observer, inject } from 'mobx-react'
+import { observer } from 'mobx-react'
 import * as React from 'react'
 import { 
   Form,
@@ -14,7 +14,6 @@ export interface LoginProps extends RouteComponentProps<{}> {
   form: any
 }
 
-@inject()
 @observer
 class Login extends React.Component<LoginProps, {}> {
   constructor (props: any) {
