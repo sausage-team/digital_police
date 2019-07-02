@@ -15,10 +15,10 @@ import { UserStore } from '../../stores/modules/user'
 export interface LoginProps extends RouteComponentProps<{}> {
   form: any,
   userService: UserService,
-  user: UserStore
+  userStore: UserStore
 }
 
-@inject('userService', 'user')
+@inject('userService', 'userStore')
 @observer
 class Login extends React.Component<LoginProps, {}> {
 
@@ -28,7 +28,7 @@ class Login extends React.Component<LoginProps, {}> {
   constructor (props: any) {
     super(props)
     this.userService = props.userService
-    this.userStore = props.user
+    this.userStore = props.userStore
   }
 
   public login = async (e: any): Promise<any> => {

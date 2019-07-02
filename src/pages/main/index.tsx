@@ -15,7 +15,7 @@ interface MainProps {
   name?: string
 }
 
-@inject('userService', 'home')
+@inject('userService', 'homeStore')
 @observer
 export default class Main extends React.Component<MainProps & RouteComponentProps<{}>, {}> {
 
@@ -23,19 +23,32 @@ export default class Main extends React.Component<MainProps & RouteComponentProp
   public homeStore: HomeStore
 
   @observable public collapsed: boolean = false
+  @observable public menuList: any[]
+  @observable public selectItem: string
+  @observable public expandItem: string[]
 
   constructor (props: any) {
     super(props)
     this.userService = props.userService
-    this.homeStore = props.home
+    this.homeStore = props.homeStore
+    this.selectItem = 'home'
+    this.expandItem = []
   }
 
   public componentDidMount () {
-    console.log(2)
+    console.log(1)
   }
 
   public toggleMenu = () => {
     this.collapsed = !this.collapsed
+  }
+
+  public toggleExpand = (sub: string[]) => {
+    this.expandItem = [...sub]
+  }
+
+  public expandTitle = (e: any) => {
+    console.log(e, this.expandItem)
   }
 
   public render () {
@@ -47,51 +60,60 @@ export default class Main extends React.Component<MainProps & RouteComponentProp
         <div className="main-body">
           <div className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
             <Menu
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
+              defaultSelectedKeys={[this.selectItem]}
+              defaultOpenKeys={this.expandItem}
               mode="inline"
+              onOpenChange={this.toggleExpand}
               theme="dark">
-                <Menu.Item key="1">
+                <Menu.Item key="home">
                   <Icon type="pie-chart" />
                   <span>工作台</span>
                 </Menu.Item>
                 <Menu.SubMenu
-                  key="sub1"
+                  key="sub2"
+                  title={
+                    <span>
+                      <Icon type="pie-chart" />
+                      <span>基础所情展示</span>
+                    </span>
+                  }>
+                  <Menu.Item key="sub2_1">所情</Menu.Item>
+                  <Menu.Item key="sub2_2">人口</Menu.Item>
+                  <Menu.Item key="sub2_3">房屋</Menu.Item>
+                  <Menu.Item key="sub2_4">警情</Menu.Item>
+                  <Menu.Item key="sub2_5">案件</Menu.Item>
+                </Menu.SubMenu>
+                <Menu.SubMenu
+                  key="sub3"
                   title={
                     <span>
                       <Icon type="mail" />
-                      <span>指挥研判</span>
+                      <span>专项分析研判</span>
                     </span>
-                  }
-                >
+                  }>
                   <Menu.SubMenu
-                    key="sub1_1"
+                    key="sub3_1"
+                    onTitleClick={this.expandTitle}
                     title={
                       <span>
                         <Icon type="mail" />
-                        <span>二级标题</span>
+                        <span>社区管理</span>
                       </span>
                     }
                   >
-                    <Menu.Item key="sub1_1_1">三级标题</Menu.Item>
                   </Menu.SubMenu>
-                  <Menu.Item key="sub1_2">二级级标题</Menu.Item>
                 </Menu.SubMenu>
                 <Menu.Item key="3">
                   <Icon type="inbox" />
-                  <span>社区管理</span>
+                  <span>任务预警中心</span>
                 </Menu.Item>
                 <Menu.Item key="4">
                   <Icon type="inbox" />
-                  <span>街面巡控</span>
+                  <span>情报协作</span>
                 </Menu.Item>
                 <Menu.Item key="5">
                   <Icon type="inbox" />
                   <span>打击破案</span>
-                </Menu.Item>
-                <Menu.Item key="6">
-                  <Icon type="inbox" />
-                  <span>情报协作</span>
                 </Menu.Item>
             </Menu>
           </div>
