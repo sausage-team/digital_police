@@ -1,98 +1,140 @@
 import { observer, inject } from 'mobx-react'
 import * as React from 'react'
-import { Menu, Icon } from 'antd'
+import { Menu, message } from 'antd'
 import { Route, Switch, Redirect, RouteComponentProps } from 'react-router'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
+import { observable } from 'mobx'
+import Util from 'src/utils'
 
 import Home from './home'
+import Cooperate from './cooperate'
+import Advance from './advance'
 import HeaderNav from 'src/components/header'
 
 import { UserService } from 'src/services/user'
-import { observable } from 'mobx';
 import { HomeStore } from 'src/stores/modules/home'
+import { MenuService } from 'src/services/menu'
+import { MenuStore } from 'src/stores/modules/menu'
 
-interface MainProps {
-  name?: string
-}
-
-@inject('userService', 'home')
+@inject('userService', 'menuService', 'homeStore', 'menuStore')
 @observer
-export default class Main extends React.Component<MainProps & RouteComponentProps<{}>, {}> {
+class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public userService: UserService
   public homeStore: HomeStore
+  public menuService: MenuService
+  public menuStore: MenuStore
 
   @observable public collapsed: boolean = false
+  @observable public menuList: any[]
+  @observable public selectItem: string
+  @observable public selectExpand: string[] = []
 
   constructor (props: any) {
     super(props)
-    this.userService = props.userService
-    this.homeStore = props.home
+    this.initConfig(props)
+    this.getMenuList()
   }
 
-  public componentDidMount () {
-    console.log(2)
+  public initConfig (props: any): void {
+    this.userService = props.userService
+    this.homeStore = props.homeStore
+    this.menuService = props.menuService
+    this.menuStore = props.menuStore
+  }
+
+  public getMenuList = async () => {
+    const item: any = this.menuStore.getMenu()
+    this.selectItem = item.id
+    this.selectExpand = item.parent_id
+    const list: any = await this.menuStore.getMenuList()
+    if (list && list.length > 0) {
+      this.menuList = list
+      return
+    }
+    const res = await this.menuService.getMenuList()
+    if (res.status === 0) {
+      Util.setMenu(res.data)
+      this.menuList = res.data
+      this.menuStore.setMenuList(this.menuList)
+    } else {
+      message.error(res.msg || '获取菜单失败')
+    }
+  }
+
+  public chooseMenu = async (item: any) => {
+    const res: any = await this.menuService.getHref({menu_name: item.name})
+    let href: string = ''
+    if (res.status === 0) {
+      href = res.data
+    } else {
+      message.error(res.msg || '获取链接失败')
+      return
+    }
+    this.menuStore.setMenu({
+      ...item,
+      href
+    })
+    switch (item.type) {
+      case 'dynamic':
+        this.props.history.push('/main/home')
+        break
+      case 'static':
+      default:
+        this.props.history.push(href)
+        break
+    }
   }
 
   public toggleMenu = () => {
     this.collapsed = !this.collapsed
   }
 
+  public MenuItem = (list: any[]): React.ReactNode => {
+    if (list && list.length > 0) {
+      return list.map((item) => {
+        if (item.children && item.children.length > 0) {
+          return (
+            <Menu.SubMenu
+              key={item.id}
+              title={
+                <span>{item.name}</span>
+              }>
+                {this.MenuItem(item.children)}
+                
+            </Menu.SubMenu>
+          )
+        } else {
+          return (
+            <Menu.Item
+              onClick={this.chooseMenu.bind(this, item)}
+              key={item.id}>
+              <span>{item.name}</span>
+            </Menu.Item>
+          )
+        }
+      })
+    }
+    return
+  }
+
   public render () {
     const location = this.props.location
     const { pathname } = location
+
     return (
       <div className="main">
         <HeaderNav toggle={this.toggleMenu} />
         <div className="main-body">
           <div className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
             <Menu
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
+              defaultSelectedKeys={[this.selectItem]}
+              defaultOpenKeys={this.selectExpand}
               mode="inline"
               theme="dark">
-                <Menu.Item key="1">
-                  <Icon type="pie-chart" />
-                  <span>工作台</span>
-                </Menu.Item>
-                <Menu.SubMenu
-                  key="sub1"
-                  title={
-                    <span>
-                      <Icon type="mail" />
-                      <span>指挥研判</span>
-                    </span>
-                  }
-                >
-                  <Menu.SubMenu
-                    key="sub1_1"
-                    title={
-                      <span>
-                        <Icon type="mail" />
-                        <span>二级标题</span>
-                      </span>
-                    }
-                  >
-                    <Menu.Item key="sub1_1_1">三级标题</Menu.Item>
-                  </Menu.SubMenu>
-                  <Menu.Item key="sub1_2">二级级标题</Menu.Item>
-                </Menu.SubMenu>
-                <Menu.Item key="3">
-                  <Icon type="inbox" />
-                  <span>社区管理</span>
-                </Menu.Item>
-                <Menu.Item key="4">
-                  <Icon type="inbox" />
-                  <span>街面巡控</span>
-                </Menu.Item>
-                <Menu.Item key="5">
-                  <Icon type="inbox" />
-                  <span>打击破案</span>
-                </Menu.Item>
-                <Menu.Item key="6">
-                  <Icon type="inbox" />
-                  <span>情报协作</span>
-                </Menu.Item>
+                {
+                  this.MenuItem(this.menuList)
+                }
             </Menu>
           </div>
           <div className="right-body">
@@ -106,6 +148,14 @@ export default class Main extends React.Component<MainProps & RouteComponentProp
                       path="/main/home"
                       component={Home}
                     />
+                    <Route
+                      path="/main/cooperate"
+                      component={Cooperate}
+                    />
+                    <Route
+                      path="/main/advance"
+                      component={Advance}
+                    />
                     <Redirect to="/main/home" />
                   </Switch>
               </CSSTransition>
@@ -116,3 +166,5 @@ export default class Main extends React.Component<MainProps & RouteComponentProp
     )
   }
 }
+
+export default Main

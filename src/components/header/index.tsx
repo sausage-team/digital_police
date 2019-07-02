@@ -1,12 +1,11 @@
 import * as React from 'react'
-import { inject, observer } from 'mobx-react'
+import { observer } from 'mobx-react'
 import moment from 'moment'
 
 export interface HeaderProps {
   toggle: () => void
 }
 
-@inject()
 @observer
 export default class HeaderNav extends React.Component<HeaderProps, {}> {
 

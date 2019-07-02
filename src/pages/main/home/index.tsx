@@ -1,29 +1,34 @@
 import * as React from 'react'
+import { observable } from 'mobx'
+import { inject, observer } from 'mobx-react';
+import { MenuStore } from 'src/stores/modules/menu'
 
-export default class Home extends React.Component<{}, {}> {
-  public iframe: React.RefObject<any>
+interface HomePorps {
+  menu: any
+}
+
+@inject('menuStore')
+@observer
+export default class Home extends React.Component<HomePorps, {}> {  // debugger
+
+  public menuStore: MenuStore
+
+  @observable public url: string
 
   constructor (props: any) {
     super(props)
-    this.iframe = React.createRef()
+    this.menuStore = props.menuStore
+    this.url = this.menuStore.getUrl()
   }
 
-  public componentDidMount () {
-    debugger
-    console.log(this.iframe.current)
-    this.iframe.current.contentWindow.postMessage('主页面发给B页面消息', 'http://127.0.0.1:9001')
-
-    window.addEventListener('message', (event) => {
-      debugger
-      console.log('主页面', event);
-      }, false);
-    
+  public componentWillReceiveProps () {
+    this.url = this.menuStore.getUrl()
   }
+
   public render () {
     return (
       <div className="home-main">
-        {/* <iframe ref={this.iframe} id="childB" className="main-frame" src="http://10.73.92.144:9777/api/custom_sso/acs?domain=wh&user_info={%22username%22:%22mypcs%22}&token=19FEBBCC189A6AE7ECF1A01406C0A90B&RelayState=embed/dashboard.html?dashId=dsh_82d8dea75ae7945f015c195a6dada43f"></iframe> */}
-        <iframe ref={this.iframe} id="childB" className="main-frame" src="http://127.0.0.1:9001"></iframe>
+        <iframe className="home-frame" src={`http://${this.url}`} ></iframe>
       </div>
     )
   }
