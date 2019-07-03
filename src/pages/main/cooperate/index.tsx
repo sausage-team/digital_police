@@ -1,12 +1,14 @@
 import * as React from 'react'
 import {
-  Button, Table
+  Button,
+  Table
 } from 'antd'
 import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import { CoopService } from 'src/services/coop'
 import Util from 'src/utils'
 import Bean from 'src/beans'
+import AddCoop from './modals/add_coop';
 
 @inject('coopService')
 @observer
@@ -22,11 +24,13 @@ class Cooperate extends React.Component<{}, {}> {
   @observable public tableData: any[]
   @observable public scrollHeight: number
   @observable public pagination: any
+  @observable public addCoopModal: boolean
 
   constructor (props: any) {
     super(props)
     this.tableBox = React.createRef()
     this.coopService = props.coopService
+    this.addCoopModal = false
     this.pagination = {
       current: 1,
       pageSize: 10,
@@ -44,6 +48,14 @@ class Cooperate extends React.Component<{}, {}> {
 
   public changePage = (page: number) => {
     console.log(page)
+  }
+
+  public openAddCoop = () => {
+    this.addCoopModal = true
+  }
+
+  public closeAddCoop = () => {
+    this.addCoopModal = false
   }
 
   public initTable = async () => {
@@ -103,13 +115,14 @@ class Cooperate extends React.Component<{}, {}> {
   public render () {
     return (
       <div className="cooperate-main">
+        <AddCoop visible={this.addCoopModal} close={this.closeAddCoop} />
         <div className="cooperate-con">
           <div className="coo-header">
             <i></i>
             <span>派出所民警</span>
           </div>
           <div className="coo-body">
-            <Button icon="plus" type="primary">
+            <Button icon="plus" onClick={this.openAddCoop} type="primary">
               发起协作
             </Button>
             <div ref={this.tableBox} className="table-con">
