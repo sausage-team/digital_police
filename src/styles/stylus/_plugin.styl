@@ -1,2 +1,66 @@
 input
   background-color: transparent;
+
+.ant-table
+  color: rgba(255, 255, 255, .8);
+
+.ant-table-small
+  border: 0;
+  border-radius: 0;
+
+
+  &.ant-table-bordered
+    & > .ant-table-content
+      border-right: 0;
+    &.ant-table-fixed-header 
+      .ant-table-scroll
+        .ant-table-header
+          &::-webkit-scrollbar
+            border: 0;
+
+  & > .ant-table-content
+    .ant-table-placeholder
+      width: calc(100% - 8px);
+      background-color: rgb(30, 66, 117);
+      border-top: 1px solid rgb(7, 21, 66);
+
+      .ant-empty-image
+        & > img
+          filter: invert(.3);
+
+      .ant-empty-description
+        color: rgba(255, 255, 255, .8);
+
+    & > .ant-table-scroll
+      & > .ant-table-header
+        background-color: rgb(30, 66, 117);
+        overflow: hidden !important;
+        width: calc(100% - 8px);
+        height 35px;
+        margin-bottom: 0 !important;
+        & > table
+          & > .ant-table-thead
+            & > tr
+              border-bottom: 1px solid rgb(7, 21, 66);
+              &:first-child
+                & > th
+                  &:first-child
+                    border-top-left-radius: 0;
+              & > th
+                color: rgba(255, 255, 255, .8);
+                border-right: 1px solid rgb(7, 21, 66);
+                border-bottom: 1px solid rgb(7, 21, 66);
+
+      & > .ant-table-body
+        background: transparent;
+        & > table
+          & > .ant-table-tbody
+            & > tr
+              &:nth-child(2n+1) 
+                background-color: rgb(13, 46, 94);
+              &:nth-child(2n+2)
+                background-color: rgb(17, 51, 100);
+              & > td
+                border-right: 1px solid rgb(7, 21, 66);
+                border-bottom: 1px solid rgb(7, 21, 66);
+
