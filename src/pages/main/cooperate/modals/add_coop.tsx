@@ -1,14 +1,16 @@
 import * as React from 'react'
-import { Modal, Input } from 'antd'
+import { Modal, Input, message } from 'antd';
 import { observable } from 'mobx'
 import { observer, inject } from 'mobx-react'
 import { UserService } from 'src/services/user'
 import { GroupService } from 'src/services/group'
+import { CoopService } from 'src/services/coop'
 
 interface AddCoopProps {
   visible: boolean
   close: () => void
   onRef: (ref: any) => void
+  refersh: () => void
 }
 
 interface CoopDataProp {
@@ -17,22 +19,27 @@ interface CoopDataProp {
   sponsor_police_id: string,
   sponsor_dep: string,
   sponsor_dep_code: string,
-  remarks: string
+  remarks: string,
+  coop_dep: string,
+  id: string
 }
 
-@inject('userService', 'groupService')
+@inject('userService', 'groupService', 'coopService')
 @observer
 class AddCoop extends React.Component<AddCoopProps, {}> {
 
   @observable public coopData: CoopDataProp
+  @observable public feedText: string
 
   public userService: UserService
   public groupService: GroupService
+  public coopService: CoopService
 
   constructor (props: any) {
     super(props)
     this.userService = props.userService
     this.groupService = props.groupService
+    this.coopService = props.coopService
     this.refresh()
   }
 
@@ -42,13 +49,31 @@ class AddCoop extends React.Component<AddCoopProps, {}> {
   }
 
   public refresh = () => {
+    this.feedText = ''
     this.coopData = {
+      id: '',
       name: '',
       sponsor_name: '',
       sponsor_police_id: '',
       sponsor_dep: '',
       sponsor_dep_code: '',
-      remarks: ''
+      remarks: '',
+      coop_dep: ''
+    }
+  }
+
+  public feed = async (id: string) => {
+    const res: any = await this.coopService.detail({
+      id
+    })
+    if (res.status === 0) {
+      this.coopData = {
+        ...this.coopData,
+        name: res.data.name,
+        remarks: res.data.remarks,
+        coop_dep: res.data.coop_dep,
+        id
+      }
     }
   }
 
@@ -75,8 +100,42 @@ class AddCoop extends React.Component<AddCoopProps, {}> {
     this.props.onRef(this)
   }
 
-  public ok = () => {
-    console.log(this.coopData)
+  public ok = async () => {
+    if (this.coopData.id) {
+      if (!this.feedText) {
+        message.error('反馈内容不能为空')
+        return
+      }
+      const res: any = await this.coopService.feedback({
+        coop_id: this.coopData.id,
+        content: this.feedText
+      })
+      if (res.status === 0) {
+        message.success('反馈成功')
+        this.props.refersh()
+        this.props.close()
+      } else {
+        message.error(res.msg || '反馈失败')
+      }
+    } else {
+      if (!this.coopData.name) {
+        message.error('名称不能为空')
+        return
+      }
+      if (!this.coopData.coop_dep) {
+        message.error('协作部门不能为空')
+        return
+      }
+      const res = await this.coopService.addCoop(this.coopData)
+      if (res.status === 0) {
+        message.success('添加成功')
+        this.props.refersh()
+        this.props.close()
+      } else {
+        message.error(res.msg || '添加失败')
+      }
+    }
+    
   }
 
   public cancel = () => {
@@ -102,15 +161,20 @@ class AddCoop extends React.Component<AddCoopProps, {}> {
           <Input
             placeholder="请填写名称（必填）"
             value={this.coopData.name}
+            disabled={!!this.coopData.id}
             onChange={e => { this.coopData.name = e.target.value }} />
         </div>
         <div className="form-input">
           <label>协作部门</label>
-          <Input />
+          <Input 
+            disabled={!!this.coopData.id}
+            value={this.coopData.coop_dep}
+            onChange={e => { this.coopData.coop_dep = e.target.value }}/>
         </div>
         <div className="form-input area">
           <label>协作请求描述</label>
           <Input.TextArea
+            disabled={!!this.coopData.id}
             placeholder="请填写协作请求描述…"
             value={this.coopData.remarks}
             onChange={e => { this.coopData.remarks = e.target.value }} />
@@ -135,6 +199,17 @@ class AddCoop extends React.Component<AddCoopProps, {}> {
             <Input disabled value={this.coopData.sponsor_dep_code} onChange={e => { this.coopData.sponsor_dep_code = e.target.value }} />
           </div>
         </div>
+        {
+          (this.coopData.id) ? (
+            <div className="form-input area">
+              <label>反馈</label>
+              <Input.TextArea
+                placeholder="请填写反馈…"
+                value={this.feedText}
+                onChange={e => { this.feedText = e.target.value }} />
+            </div>
+          ) : ('')
+        }
       </Modal>
     )
   }

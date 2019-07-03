@@ -14,6 +14,22 @@ export class CoopService extends Service {
   @action public async addCoop (data: any = {}) {
     return this.post('/add', data)
   }
+
+  @action public async receive (data: any = {}) {
+    return this.get('/receive', data)
+  }
+
+  @action public async finish (data: any = {}) {
+    return this.get('/finish', data)
+  }
+
+  @action public async detail (data: any = {}) {
+    return this.get('', data)
+  }
+
+  @action public async feedback (data: any = {}) {
+    return this.post('/feedback', data)
+  }
 }
 
 export default new CoopService()

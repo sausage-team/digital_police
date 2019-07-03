@@ -41,6 +41,13 @@ class Advance extends React.Component<{}, {}> {
     console.log(page)
   }
 
+  public searchList = async (id: string) => {
+    const resp: any = await this.msgService.getMsgList({id: this.chooseTask})
+    if (resp.status === 0) {
+      this.msgList = resp.data.list
+    }
+  }
+
   public init = async () => {
     this.tableBox = React.createRef()
     this.tableConfig = [
@@ -62,11 +69,31 @@ class Advance extends React.Component<{}, {}> {
         width: 200,
         title: '操作',
         key: 'op',
-        render: () => (
-          <div className="op-box">
-            <Button size="small">接受</Button>
-          </div>
-        )
+        render: (data: any) => {
+          switch (data.status) {
+            case 0:
+            default:
+              return (
+                <div className="op-box">
+                  <Button className="receive">接受</Button>
+                  <Button className="assign">派发</Button>
+                </div>
+              )
+            case 1:
+              return (
+                <div className="op-box">
+                  <Button className="feed">反馈</Button>
+                  <Button className="finish">完成</Button>
+                </div>
+              )
+            case 2:
+              return (
+                <div className="op-box">
+                  <Button disabled className="finish">已完成</Button>
+                </div>
+              )
+          }
+        }
       }
     ]
     const res: any = await this.msgService.getTaskTree()
@@ -83,15 +110,15 @@ class Advance extends React.Component<{}, {}> {
         })
       })
       this.chooseTask = task.id
-      const resp: any = await this.msgService.getMsgList({id: this.chooseTask})
-      if (resp.status === 0) {
-        this.msgList = resp.data.list
-      }
+      this.searchList(this.chooseTask)
     }
   }
 
   public chooseMsg = async (item: any) => {
-    console.log(item)
+    if (this.chooseTask !== item.id) {
+      this.chooseTask = item.id
+      this.searchList(this.chooseTask)
+    }
   }
 
   public render () {

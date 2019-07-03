@@ -1,7 +1,9 @@
 import * as React from 'react'
 import {
   Button,
-  Table
+  Table,
+  Modal,
+  message
 } from 'antd'
 import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react'
@@ -20,7 +22,7 @@ class Cooperate extends React.Component<{}, {}> {
   public addCoopRef: any
   public count: number
 
-  @observable public page: number
+  @observable public page: number = 1
   @observable public total: number
   @observable public tableData: any[]
   @observable public scrollHeight: number
@@ -33,12 +35,10 @@ class Cooperate extends React.Component<{}, {}> {
     this.coopService = props.coopService
     this.addCoopModal = false
     this.pagination = {
-      current: 1,
       pageSize: 10,
-      total: 10,
       size: 'middle',
-      hideOnSinglePage: true,
-      onChange: this.changePage
+      onChange: this.changePage,
+      hideOnSinglePage: true
     }
     this.initTable()
   }
@@ -48,7 +48,8 @@ class Cooperate extends React.Component<{}, {}> {
   }
 
   public changePage = (page: number) => {
-    console.log(page)
+    this.page = page
+    this.searchData()
   }
 
   public openAddCoop = () => {
@@ -58,6 +59,64 @@ class Cooperate extends React.Component<{}, {}> {
 
   public closeAddCoop = () => {
     this.addCoopModal = false
+  }
+
+  public searchData = async () => {
+    this.tableData = []
+    const res: any = await this.coopService.getCoopList({
+      page_no: this.page,
+      page_size: this.pagination.pageSize
+    })
+    if (res.status === 0) {
+      this.tableData = res.data.data
+      this.total = res.data.total_count
+    }
+  }
+
+  public recive = (data: any) => {
+    Modal.confirm({
+      title: '提示',
+      content: `是否接收${data.name}`,
+      cancelText: '取消',
+      okText: '确定',
+      onOk: async () => {
+        const res = await this.coopService.receive({
+          id: data.id
+        })
+        if (res.status === 0) {
+          message.success('接收成功')
+          this.searchData()
+        } else {
+          message.error(res.msg || '接受失败')
+        }
+      }
+    })
+  }
+
+  public feed = async (data: any) => {
+    await this.addCoopRef.init()
+    await this.addCoopRef.feed(data.id)
+    this.addCoopModal = true
+  }
+
+  public finish = (data: any) => {
+    Modal.confirm({
+      title: '提示',
+      content: `是否完成${data.name}`,
+      cancelText: '取消',
+      okText: '确定',
+      onOk: async () => {
+        const res = await this.coopService.finish({
+          id: data.id
+        })
+        if (res.status === 0) {
+          message.success('协作完成')
+          this.searchData()
+        } else {
+          message.error(res.msg || '协作完成异常')
+        }
+      }
+    })
   }
 
   public initTable = async () => {
@@ -96,22 +155,45 @@ class Cooperate extends React.Component<{}, {}> {
         )
       },
       {
-        width: 80,
+        width: 120,
         title: '操作',
         key: 'op',
-        render: () => (
-          <div className="op-box">
-            <Button size="small">接受</Button>
-          </div>
-        )
+        render: (data: any, index: number) => {
+          data.showJSBtn = false
+          data.showWCBtn = false
+          return (
+            <div className="op-box">
+              {
+                (data.status === 0) ? (
+                  <Button className="receive" onClick={this.recive.bind(this, data)}>接收</Button>
+                ) : ('')
+              }
+              {
+                (data.status === 1 && !data.is_owner) ? (
+                  <Button className="feed" onClick={this.feed.bind(this, data)}>反馈</Button>
+                ) : ('')
+              }
+              {
+                (data.status === 1 && data.is_owner) ? (
+                  <Button className="finish" onClick={this.finish.bind(this, data)}>完成</Button>
+                ) : ('')
+              }
+              {
+                (data.status === 2) ? (
+                  <Button className="feed" onClick={this.feed.bind(this, data)} type="primary">已反馈</Button>
+                ) : ('')
+              }
+              {
+                (data.status === 3) ? (
+                  <Button disabled className="finish" type="primary">已完成</Button>
+                ) : ('')
+              }
+            </div>
+          )
+        }
       }
     ]
-    this.tableData = []
-    const res: any = await this.coopService.getCoopList()
-    if (res.status === 0) {
-      this.tableData = [] = res.data.data
-      this.pagination.total = res.data.total_count
-    }
+    this.searchData()
   }
 
   public onRef = (ref: any) => {
@@ -121,7 +203,11 @@ class Cooperate extends React.Component<{}, {}> {
   public render () {
     return (
       <div className="cooperate-main">
-        <AddCoop onRef={this.onRef} visible={this.addCoopModal} close={this.closeAddCoop} />
+        <AddCoop
+          onRef={this.onRef}
+          visible={this.addCoopModal}
+          refersh={this.searchData}
+          close={this.closeAddCoop} />
         <div className="cooperate-con">
           <div className="coo-header">
             <i></i>
@@ -140,7 +226,11 @@ class Cooperate extends React.Component<{}, {}> {
                   x: false,
                   y: this.scrollHeight
                 }}
-                pagination={this.pagination}
+                pagination={{
+                  ...this.pagination,
+                  current: this.page,
+                  total: this.total
+                }}
                 columns={this.tableConfig}
                 dataSource={this.tableData} />
             </div>
