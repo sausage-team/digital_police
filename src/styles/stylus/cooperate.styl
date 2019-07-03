@@ -43,3 +43,47 @@
         .ant-table-wrapper
           width: 100%;
           height 100%;
+
+.add-coop-modal
+  .form-input
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+
+    &.area
+      display: block;
+
+      & > label 
+        line-height 30px;
+        display: inline-block;
+        width: 100%;
+
+      & > textarea 
+        width: 100%;
+        height 80px;
+        background-color: rgb(6, 36, 86);
+        border: 0;
+        resize: none;
+
+    & > label 
+      width 60px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, .8);
+
+    & > .ant-input
+      width: calc(100% - 70px);
+
+    .item
+      width: calc(50% - 5px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      & > label
+        width: 60px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, .8);
+
+      & > .ant-input
+        width: calc(100% - 70px);
+

@@ -17,6 +17,7 @@ class Cooperate extends React.Component<{}, {}> {
   public coopService: CoopService
   public tableConfig: any[]
   public tableBox: React.RefObject<any>
+  public addCoopRef: any
   public count: number
 
   @observable public page: number
@@ -51,6 +52,7 @@ class Cooperate extends React.Component<{}, {}> {
   }
 
   public openAddCoop = () => {
+    this.addCoopRef.init()
     this.addCoopModal = true
   }
 
@@ -112,10 +114,14 @@ class Cooperate extends React.Component<{}, {}> {
     }
   }
 
+  public onRef = (ref: any) => {
+    this.addCoopRef = ref
+  }
+
   public render () {
     return (
       <div className="cooperate-main">
-        <AddCoop visible={this.addCoopModal} close={this.closeAddCoop} />
+        <AddCoop onRef={this.onRef} visible={this.addCoopModal} close={this.closeAddCoop} />
         <div className="cooperate-con">
           <div className="coo-header">
             <i></i>
