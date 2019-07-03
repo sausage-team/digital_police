@@ -2,6 +2,7 @@ import * as React from 'react'
 import { observable } from 'mobx'
 import { inject, observer } from 'mobx-react';
 import { MenuStore } from 'src/stores/modules/menu'
+import Util from 'src/utils'
 
 interface HomePorps {
   menu: any
@@ -17,18 +18,26 @@ export default class Home extends React.Component<HomePorps, {}> {  // debugger
 
   constructor (props: any) {
     super(props)
-    this.menuStore = props.menuStore
-    this.url = this.menuStore.getUrl()
   }
 
   public componentWillReceiveProps () {
-    this.url = this.menuStore.getUrl()
+    const map: any = Util.getHrefMap(location.search)
+    if (map && map.href) {
+      this.url = decodeURIComponent(map.href)
+    }
   }
 
   public render () {
     return (
       <div className="home-main">
-        <iframe className="home-frame" src={`http://${this.url}`} ></iframe>
+        {
+          (this.url) ? (
+            <iframe
+              className="home-frame"
+              src={(this.url.indexOf('http://') > -1) ? (this.url) : (`http://${this.url}`)} >
+            </iframe>
+          ) : ('')
+        }
       </div>
     )
   }

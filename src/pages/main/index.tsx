@@ -45,8 +45,10 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public getMenuList = async () => {
     const item: any = this.menuStore.getMenu()
-    this.selectItem = item.id
-    this.selectExpand = item.parent_id
+    if (item) {
+      this.selectItem = item.id
+      this.selectExpand = item.parent_id
+    }
     const list: any = await this.menuStore.getMenuList()
     if (list && list.length > 0) {
       this.menuList = list
@@ -77,11 +79,11 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     })
     switch (item.type) {
       case 'dynamic':
-        this.props.history.push('/main/home')
+        this.props.history.push(`/main/home?id=${item.id}&&href=${encodeURIComponent(item.href)}`)
         break
       case 'static':
       default:
-        this.props.history.push(href)
+        this.props.history.push(`${href}?id=${item.id}`)
         break
     }
   }
