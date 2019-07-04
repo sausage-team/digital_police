@@ -27,9 +27,9 @@
     "watch-css": "yarn run build-css && stylus -c -w src/styles/stylus/ --out src/styles/css",
     "lint-styl": "stylint src/styles/stylus",
     "start-ts": "react-app-rewired start --scripts-version react-scripts-ts",
-    "start": "yarn run start-ts",
+    "start": "npm-run-all start-ts",
     "build-ts": "react-app-rewired build --scripts-version react-scripts-ts",
-    "build": "yarn run build-ts",
+    "build": "npm-run-all lint build-ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "eject": "react-scripts-ts eject"
   },
@@ -61,14 +61,5 @@
       "pre-commit": "yarn lint && yarn lint-styl"
     }
   },
-  "proxy": {
-    "/api": {
-      "target": "http://192.168.18.196:8081",
-      "changeOrigin": true,
-      "ws": false,
-      "pathRewrite": {
-        "^/api": "/api"
-      }
-    }
-  }
+  "config-overrides-path": "./webpack.config.js"
 }
