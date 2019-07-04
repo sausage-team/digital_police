@@ -125,6 +125,14 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     this.collapsed = !this.collapsed
   }
   
+  public hideMenu = () => {
+    this.collapsed = false
+  }
+
+  public showMenu = () => {
+    this.collapsed = true
+  }
+
   public sigout = async (): Promise<any> => {
     const res = await this.userService.sigout()
     if (res.status === 0) {
@@ -180,7 +188,8 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
       <div className="main">
         <HeaderNav toggle={this.toggleMenu} sigout={this.sigout}/>
         <div className="main-body">
-          <div className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
+          <div className="menu-slide" onMouseEnter={this.showMenu}></div>
+          <div onMouseLeave={this.hideMenu} className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
             <Menu
               selectedKeys={this.selectItem}
               openKeys={this.selectExpand}
