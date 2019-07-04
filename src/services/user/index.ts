@@ -14,6 +14,10 @@ export class UserService extends Service {
   @action public async getProfile (data: any = {}): Promise<any> {
     return this.get('/user/profile', data)
   }
+
+  @action public async getUseList (data: any = {}): Promise<any> {
+    return this.get('/user/list', data)
+  }
 }
 
 export default new UserService()
