@@ -105,6 +105,16 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     if (href) {
       this.props.history.push(href)
     }
+    this.selectItem = [item.id]
+  }
+
+  public expandItem = async (data: any) => {
+    const index = this.selectExpand.indexOf(data.id)
+    if (index > -1) {
+      this.selectExpand.splice(index, 1)
+    } else {
+      this.selectExpand.push(data.id)
+    }
   }
 
   public toggleMenu = () => {
@@ -120,7 +130,8 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
               key={item.id}
               title={
                 <span>{item.name}</span>
-              }>
+              }
+              onTitleClick={this.expandItem.bind(this, item)}>
                 {this.MenuItem(item.children)}
                 
             </Menu.SubMenu>
