@@ -60,14 +60,5 @@
       "pre-commit": "yarn lint && yarn lint-styl"
     }
   },
-  "proxy": {
-    "/api": {
-      "target": "http://192.168.18.148:8080",
-      "changeOrigin": true,
-      "ws": false,
-      "pathRewrite": {
-        "^/api": "/api"
-      }
-    }
-  }
+  "config-overrides-path": "./webpack.config.js"
 }
