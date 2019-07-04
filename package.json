@@ -27,7 +27,7 @@
     "watch-css": "yarn run build-css && stylus -c -w src/styles/stylus/ --out src/styles/css",
     "lint-styl": "stylint src/styles/stylus",
     "start-ts": "react-app-rewired start --scripts-version react-scripts-ts",
-    "start": "start-ts",
+    "start": "yarn run start-ts",
     "build-ts": "react-app-rewired build --scripts-version react-scripts-ts",
     "build": "build-ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",

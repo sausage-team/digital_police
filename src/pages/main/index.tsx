@@ -27,7 +27,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   @observable public collapsed: boolean = false
   @observable public menuList: any[]
-  @observable public selectItem: string
+  @observable public selectItem: string[]
   @observable public selectExpand: string[] = []
 
   constructor (props: any) {
@@ -46,7 +46,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
   public getMenuList = async () => {
     const item: any = this.menuStore.getMenu()
     if (item) {
-      this.selectItem = item.id
+      this.selectItem = [item.id]
       this.selectExpand = item.parent_id
     }
     const list: any = await this.menuStore.getMenuList()
@@ -59,19 +59,31 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
       Util.setMenu(res.data)
       this.menuList = res.data
       this.menuStore.setMenuList(this.menuList)
+      if (!item) {
+        const select: any = this.menuList.slice()[0]
+        this.selectItem = [select.id]
+        this.selectExpand = select.parent_id
+        const href: string = await this.menuCache(select)
+
+        if (!location.search && href) {
+          this.props.history.push(href)
+        }
+      }
+      console.log(this.selectItem)
     } else {
       message.error(res.msg || '获取菜单失败')
     }
+    
   }
 
-  public chooseMenu = async (item: any) => {
+  public menuCache = async (item: any): Promise<string> => {
     const res: any = await this.menuService.getHref({menu_name: item.name})
     let href: string = ''
     if (res.status === 0) {
       href = res.data
     } else {
       message.error(res.msg || '获取链接失败')
-      return
+      return ''
     }
     this.menuStore.setMenu({
       ...item,
@@ -79,12 +91,19 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     })
     switch (item.type) {
       case 'dynamic':
-        this.props.history.push(`/main/home?id=${item.id}&&href=${encodeURIComponent(item.href)}`)
+        return `/main/home?id=${item.id}&&href=${encodeURIComponent(item.href)}`
         break
       case 'static':
       default:
-        this.props.history.push(`${href}?id=${item.id}`)
+        return `${href}?id=${item.id}`
         break
+    }
+  }
+
+  public chooseMenu = async (item: any) => {
+    const href: string = await this.menuCache(item)
+    if (href) {
+      this.props.history.push(href)
     }
   }
 
@@ -130,8 +149,8 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
         <div className="main-body">
           <div className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
             <Menu
-              defaultSelectedKeys={[this.selectItem]}
-              defaultOpenKeys={this.selectExpand}
+              selectedKeys={this.selectItem}
+              openKeys={this.selectExpand}
               mode="inline"
               theme="dark">
                 {
