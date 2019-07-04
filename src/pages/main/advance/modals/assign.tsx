@@ -120,6 +120,7 @@ class Assign extends React.Component<AssignProps, {}> {
       <Modal
         title="派发"
         centered
+        maskClosable={false}
         className="assign-main"
         cancelText={'取消'}
         okText={'确定'}
