@@ -1,27 +1,58 @@
-import { observer, inject } from 'mobx-react'
 import * as React from 'react'
+import { observer, inject } from 'mobx-react'
 import { 
   Form,
   Icon,
   Input,
   Button,
-  Checkbox
+  Checkbox,
+  message
 } from 'antd'
 import { RouteComponentProps } from 'react-router'
+import { UserService } from 'src/services/user'
+import { UserStore } from 'src/stores/modules/user'
+import { MenuStore } from 'src/stores/modules/menu'
 
 export interface LoginProps extends RouteComponentProps<{}> {
-  form: any
+  form: any,
+  userService: UserService,
+  userStore: UserStore
 }
 
-@inject()
+@inject('userService', 'userStore', 'menuStore')
 @observer
 class Login extends React.Component<LoginProps, {}> {
+
+  public userService: UserService
+  public userStore: UserStore
+  public menuStore: MenuStore
+
   constructor (props: any) {
     super(props)
+    this.userService = props.userService
+    this.userStore = props.userStore
+    this.menuStore = props.menuStore
   }
 
-  public login = (e: any): void => {
+  public login = async (e: any): Promise<any> => {
     e.preventDefault()
+    this.props.form.validateFields(async (err: any, values: any) => {
+      if (!err) {
+        const putData: any = {
+          ...values,
+          remember: undefined
+        }
+        const res = await this.userService.sign(putData)
+        if (res.status === 0) {
+          message.success('登录成功')
+          this.userStore.saveLoginData(res.data)
+          this.menuStore.reCache()
+          this.props.history.replace('/main/home')
+        } else {
+          message.error(res.msg || '登录失败')
+        }
+      }
+    })
   }
 
   public render () {
@@ -29,7 +60,11 @@ class Login extends React.Component<LoginProps, {}> {
     return (
       <div className="login-main">
         <div className="login-form">
-          <Form onSubmit={this.login}>
+          <div className="login-logo">
+            <i></i>
+            <span>武汉市公安局数字派出所管理平台</span>
+          </div>
+          <Form className="form-con" onSubmit={this.login}>
             <Form.Item>
               {
                 getFieldDecorator('username', {
@@ -70,13 +105,13 @@ class Login extends React.Component<LoginProps, {}> {
                   })(
                   <Checkbox>记住密码</Checkbox>)
                 }
-                <a className="login-form-forgot" href="">
-                  忘记密码
-                </a>
               </div>
               <div className="sub-box">
                 <Button type="primary" htmlType="submit" className="login-form-button">
                   登录
+                </Button>
+                <Button type="primary" className="login-form-button">
+                  PKI登录
                 </Button>
               </div>
             </Form.Item>

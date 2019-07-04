@@ -1,0 +1,68 @@
+.header-main
+  width 100%;
+  height 60px;
+  display: flex;
+  position relative;
+  z-index: 1001;
+
+  .left-box
+    width: calc(50% - 300px);
+    height 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 16px;
+    cursor: pointer; 
+    icon('titlebg-left.png');
+
+    .op-box
+      width: 52px;
+      height: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      & > i
+        display: block;
+        width: 20px;
+        height 20px;
+        icon('menu.png');
+
+      & > span
+        font-size: 16px;
+        color: #62AEFF;
+
+  .mid-box
+    width: 600px;
+    height 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .title
+      width: 569px;
+      height 100%;
+      icon('sy-title.png');
+
+  .right-box
+    width: calc(50% - 300px);
+    height 100%;
+    display flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 0 20px 10px 0;
+    icon('titlebg-right.png');
+    color: #62AEFF;
+    font-size: 16px;
+
+    .place
+      margin-right: 10px;
+    .time
+      font-size: 16px;
+    .logout
+      margin-left: 10px;
+      margin-bottom: 2px;
+      padding-left: 20px;
+      background-position: left;
+      background-repeat: no-repeat;
+      background-image: url('../../assets/logout.png');
+      cursor pointer;

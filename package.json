@@ -5,10 +5,11 @@
   "dependencies": {
     "antd": "^3.19.8",
     "axios": "^0.19.0",
+    "delay": "^4.3.0",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",
     "mobx": "^5.10.1",
-    "mobx-react": "^6.1.1",
+    "mobx-react": "^5.4.4",
     "mobx-react-devtools": "^6.1.1",
     "mobx-react-router": "^4.0.7",
     "moment": "^2.24.0",
@@ -25,10 +26,10 @@
     "build-css": "stylus -c src/styles/stylus/ --out src/styles/css",
     "watch-css": "yarn run build-css && stylus -c -w src/styles/stylus/ --out src/styles/css",
     "lint-styl": "stylint src/styles/stylus",
-    "start-ts": "react-scripts-ts start",
-    "start": "npm-run-all -p watch-css start-ts",
-    "build-ts": "react-scripts-ts build",
-    "build": "npm-run-all build-css build-ts",
+    "start-ts": "react-app-rewired start --scripts-version react-scripts-ts",
+    "start": "npm-run-all start-ts",
+    "build-ts": "react-app-rewired build --scripts-version react-scripts-ts",
+    "build": "npm-run-all lint build-ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "eject": "react-scripts-ts eject"
   },
@@ -36,6 +37,7 @@
     "@material-ui/core": "^4.1.2",
     "@types/jest": "^24.0.15",
     "@types/js-cookie": "^2.2.2",
+    "@types/lodash": "^4.14.135",
     "@types/node": "^12.0.10",
     "@types/react": "^16.8.22",
     "@types/react-dom": "^16.8.4",
@@ -47,9 +49,11 @@
     "@types/webpack-env": "^1.13.9",
     "husky": "^2.5.0",
     "npm-run-all": "^4.1.5",
+    "react-app-rewired": "1.6.2",
     "react-scripts-ts": "3.1.0",
     "stylint": "^1.5.9",
     "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
     "typescript": "^3.6.0-dev.20190626"
   },
   "husky": {
@@ -57,14 +61,5 @@
       "pre-commit": "yarn lint && yarn lint-styl"
     }
   },
-  "proxy": {
-    "/api": {
-      "target": "http://localhost:5000",
-      "changeOrigin": true,
-      "ws": false,
-      "pathRewrite": {
-        "^/api": "/api"
-      }
-    }
-  }
+  "config-overrides-path": "./webpack.config.js"
 }

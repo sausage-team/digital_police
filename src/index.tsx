@@ -9,7 +9,7 @@ import stores from './stores'
 import services from './services'
 
 import 'antd/dist/antd.css'
-import './styles/css/index.css'
+import './styles/stylus/index.styl'
 
 ReactDOM.render(
   <Provider {...stores} {...services}>

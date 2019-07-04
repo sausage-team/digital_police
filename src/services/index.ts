@@ -1,6 +1,8 @@
 import axios from 'axios'
 import 'reflect-metadata'
 import loaderStore, { LoaderStore } from '../stores/modules/loader'
+import { message } from 'antd'
+import user from '../stores/modules/user'
 
 interface HttpBase {
   http: any,
@@ -25,6 +27,10 @@ class AxiosUtil {
         if (this.reqCount === 0) {
           this.loader.loaderStart()
         }
+        const account: any = user.getAccount()
+        if (account) {
+          config.headers.Authorization = `Bearer ${account.access_token}`
+        }
         this.reqCount++
         return config
       }, (error: any) => {
@@ -45,6 +51,17 @@ class AxiosUtil {
         this.reqCount--
         if (this.reqCount === 0) {
           this.loader.loaderEnd()
+        }
+        if (error.response) {
+          switch (error.response.status) {
+            case 401:
+            case 403:
+              message.error('登录已经失效，请重新登录')
+              user.sigout()
+              break
+            default:
+              break
+          }
         }
         return Promise.reject(error)
       })
