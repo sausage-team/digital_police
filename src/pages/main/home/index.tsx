@@ -51,24 +51,22 @@ export default class Home extends React.Component<HomePorps, {}> {
         return
       }
       const menuList: any = await this.menuStore.getMenuList()
-      const menuListArray: [] = menuList.slice()
+      let targetMenuObj: any
       if (event.data.type === 'toDigitalInfoCoop') {
-        const targetMenu: any = menuListArray.find((item: any) => {
-          return item.id === '15'
-        })
-        const targetMenuObj = {...targetMenu}
-        this.menuStore.setMenu(targetMenuObj)
-        this.props.history.push('/main/cooperate?id=15')
+        targetMenuObj =  Util.findMenuByName('情报协作', menuList)
+        this.props.history.push(`/main/cooperate?id=${targetMenuObj.id}`)
       }
 
       if (event.data.type === 'toDigitalTask') {
-        const targetMenu: any = menuListArray.find((item: any) => {
-          return item.id === '14'
-        })
-        const targetMenuObj = {...targetMenu}
-        this.menuStore.setMenu(targetMenuObj)
-        this.props.history.push('/main/advance?id=14')
+        targetMenuObj =  Util.findMenuByName('任务预警中心', menuList)
+        this.props.history.push(`/main/advance?id=${targetMenuObj.id}`)
       }
+
+      if (event.data.type === 'toPersonManage') {
+        targetMenuObj =  Util.findMenuByName('人口管理', menuList)
+        this.props.history.push(`/main/advance?id=${targetMenuObj.id}&href=${targetMenuObj.href}`)
+      }
+      this.menuStore.setMenu(targetMenuObj)
 
     }, false);
   }
