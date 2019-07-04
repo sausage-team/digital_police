@@ -29,7 +29,7 @@
     "start-ts": "react-app-rewired start --scripts-version react-scripts-ts",
     "start": "yarn run start-ts",
     "build-ts": "react-app-rewired build --scripts-version react-scripts-ts",
-    "build": "build-ts",
+    "build": "yarn run build-ts",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "eject": "react-scripts-ts eject"
   },

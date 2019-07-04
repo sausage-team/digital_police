@@ -32,19 +32,21 @@ export default class Home extends React.Component<HomePorps, {}> {
     if (map && map.href) {
       this.url = decodeURIComponent(map.href)
     }
-    let BDPOrigin = 'http://10.73.92.144'
-    if (this.url) {
-      const originArray = this.url.split(':')
-      BDPOrigin = originArray[0] + ':' + originArray[1]
-    }
-    
+       
+  }
+  public componentDidMount () {
     window.addEventListener('message', async (event: any) => {
+      let BDPOrigin = 'http://10.73.92.144'
+      if (this.url) {
+        const originArray = this.url.split(':')
+        BDPOrigin = originArray[0] + ':' + originArray[1]
+      }
+
       if (event.origin !== BDPOrigin) {
         return
       }
       if (event.data.type === 'getToken') {
         const account: any = this.userStore.getAccount()
-        console.log('access_token', account.access_token)
         event.source.postMessage({'access_token': account.access_token}, event.origin)
         return
       }
@@ -78,7 +80,7 @@ export default class Home extends React.Component<HomePorps, {}> {
           (this.url) ? (
             <iframe
               className="home-frame"
-              src={(this.url.indexOf('http://') > -1) ? (this.url) : (`http://${this.url}`)} >
+              src={(this.url.indexOf('http://') > -1) ? (this.url) : (`http://localhost:9300`)} >
             </iframe>
           ) : ('')
         }
