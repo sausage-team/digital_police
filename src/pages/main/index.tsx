@@ -15,8 +15,9 @@ import { UserService } from 'src/services/user'
 import { HomeStore } from 'src/stores/modules/home'
 import { MenuService } from 'src/services/menu'
 import { MenuStore } from 'src/stores/modules/menu'
+import { UserStore } from 'src/stores/modules/user'
 
-@inject('userService', 'menuService', 'homeStore', 'menuStore')
+@inject('userService', 'menuService', 'homeStore', 'menuStore', 'userStore')
 @observer
 class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
@@ -24,6 +25,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
   public homeStore: HomeStore
   public menuService: MenuService
   public menuStore: MenuStore
+  public userStore: UserStore
 
   @observable public collapsed: boolean = false
   @observable public menuList: any[]
@@ -41,6 +43,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     this.homeStore = props.homeStore
     this.menuService = props.menuService
     this.menuStore = props.menuStore
+    this.userStore = props.userStore
   }
 
   public getMenuList = async () => {
@@ -106,6 +109,7 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
       this.props.history.push(href)
     }
     this.selectItem = [item.id]
+    this.collapsed = false
   }
 
   public expandItem = async (data: any) => {
@@ -119,6 +123,23 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
 
   public toggleMenu = () => {
     this.collapsed = !this.collapsed
+  }
+  
+  public hideMenu = () => {
+    this.collapsed = false
+  }
+
+  public showMenu = () => {
+    this.collapsed = true
+  }
+
+  public sigout = async (): Promise<any> => {
+    const res = await this.userService.sigout()
+    if (res.status === 0) {
+      this.userStore.sigout()
+    } else {
+      message.error(res.msg || '操作失败')
+    }
   }
 
   public MenuItem = (list: any[]): React.ReactNode => {
@@ -150,15 +171,25 @@ class Main extends React.Component<RouteComponentProps<{}>, {}> {
     return
   }
 
+  public componentWillReceiveProps (nextPrpos: any) {
+    if (nextPrpos.location.pathname !== this.props.location.pathname) {
+      const search = nextPrpos.location.search
+      const map: any = Util.getHrefMap(search)
+      this.selectItem = [map.id]
+    }
+   
+  }
+
   public render () {
     const location = this.props.location
     const { pathname } = location
 
     return (
       <div className="main">
-        <HeaderNav toggle={this.toggleMenu} />
+        <HeaderNav toggle={this.toggleMenu} sigout={this.sigout}/>
         <div className="main-body">
-          <div className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
+          <div className="menu-slide" onMouseEnter={this.showMenu}></div>
+          <div onMouseLeave={this.hideMenu} className={`left-menu ${this.collapsed ? '' : 'unexpand' }`}>
             <Menu
               selectedKeys={this.selectItem}
               openKeys={this.selectExpand}
