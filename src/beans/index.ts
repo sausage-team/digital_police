@@ -14,5 +14,5 @@ export default class Bean {
     3: '已完成',
     4: '已反馈'
   }
-
+  public static BDP_ORIGIN = 'http://10.73.92.144'
 }
