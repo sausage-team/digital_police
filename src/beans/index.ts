@@ -15,4 +15,14 @@ export default class Bean {
     4: '已反馈'
   }
 
+  public static DEP_SEL_LIST = [
+    {
+      name: '分局协作作战中心',
+      value: '分局协作作战中心'
+    },
+    {
+      name: '市局大数据中心',
+      value: '市局大数据中心'
+    }
+  ] 
 }
