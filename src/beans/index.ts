@@ -25,4 +25,6 @@ export default class Bean {
       value: '市局大数据中心'
     }
   ] 
+  
+  public static BDP_ORIGIN = 'http://10.73.92.144'
 }
